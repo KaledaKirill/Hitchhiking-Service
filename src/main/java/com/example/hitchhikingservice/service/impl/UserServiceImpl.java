@@ -9,7 +9,6 @@ import com.example.hitchhikingservice.service.UserService;
 import com.example.hitchhikingservice.service.mapper.UserMapper;
 import com.example.hitchhikingservice.utils.ErrorMessages;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponseDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public UserResponseDto getUserById(Long id) {
