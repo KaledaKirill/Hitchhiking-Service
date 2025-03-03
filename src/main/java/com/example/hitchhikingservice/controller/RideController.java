@@ -48,10 +48,9 @@ public class RideController {
 
     @PostMapping("/create")
     public ResponseEntity<RideResponseDto> createRide(
-            @RequestParam Long driverId,
             @RequestBody RideRequestDto rideRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(rideService.createRide(rideRequestDto, driverId));
+                .body(rideService.createRide(rideRequestDto));
     }
 
     @PutMapping("/update/{id}")

@@ -14,7 +14,7 @@ public interface RideService {
 
     List<RideResponseDto> getRidesByPassenger(Long passengerId);
 
-    RideResponseDto createRide(RideRequestDto rideRequestDto, Long driverId);
+    RideResponseDto createRide(RideRequestDto rideRequestDto);
 
     RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto);
 

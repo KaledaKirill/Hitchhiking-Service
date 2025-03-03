@@ -57,8 +57,8 @@ public class RideServiceImpl implements RideService {
 
     @Override
     @Transactional
-    public RideResponseDto createRide(RideRequestDto rideRequestDto, Long driverId) {
-        User driver = userRepository.findById(driverId)
+    public RideResponseDto createRide(RideRequestDto rideRequestDto) {
+        User driver = userRepository.findById(rideRequestDto.driverId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND));
         Ride ride = rideMapper.toRide(rideRequestDto, driver);
         Ride savedRide = rideRepository.save(ride);
