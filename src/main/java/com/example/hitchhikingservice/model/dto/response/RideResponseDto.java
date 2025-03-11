@@ -11,7 +11,7 @@ public record RideResponseDto(
         String destination,
         LocalDateTime departureTime,
         String comment,
-        Long driverId,
-        List<Long> passengerIds
+        UserResponseDto driver,
+        List<UserResponseDto> passengers
 ) {}
 

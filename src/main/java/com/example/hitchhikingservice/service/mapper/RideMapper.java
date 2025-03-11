@@ -4,10 +4,14 @@ import com.example.hitchhikingservice.model.dto.request.RideRequestDto;
 import com.example.hitchhikingservice.model.dto.response.RideResponseDto;
 import com.example.hitchhikingservice.model.entity.Ride;
 import com.example.hitchhikingservice.model.entity.User;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class RideMapper {
+
+    private final UserMapper userMapper;
 
     public RideResponseDto toRideResponseDto(Ride ride) {
         return new RideResponseDto(
@@ -18,10 +22,8 @@ public class RideMapper {
                 ride.getDestination(),
                 ride.getDepartureTime(),
                 ride.getComment(),
-                ride.getDriver().getId(),
-                ride.getPassengers().stream()
-                        .map(User::getId)
-                        .toList()
+                userMapper.toUserResponseDto(ride.getDriver()),
+                ride.getPassengers().stream().map(userMapper::toUserResponseDto).toList()
         );
     }
 

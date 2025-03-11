@@ -61,6 +61,7 @@ public class RideServiceImpl implements RideService {
         User driver = userRepository.findById(rideRequestDto.driverId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND));
         Ride ride = rideMapper.toRide(rideRequestDto, driver);
+
         Ride savedRide = rideRepository.save(ride);
         return rideMapper.toRideResponseDto(savedRide);
     }
