@@ -10,9 +10,9 @@ public interface RideService {
 
     RideResponseDto getRideById(Long id);
 
-    List<RideResponseDto> getRidesByDriver(Long driverId);
+    List<RideResponseDto> getRidesByDriverId(Long driverId);
 
-    List<RideResponseDto> getRidesByPassenger(Long passengerId);
+    List<RideResponseDto> getRidesByPassengerId(Long passengerId);
 
     RideResponseDto createRide(RideRequestDto rideRequestDto);
 

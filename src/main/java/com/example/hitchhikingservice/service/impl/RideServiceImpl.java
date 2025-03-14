@@ -47,19 +47,21 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public List<RideResponseDto> getRidesByDriver(Long driverId) {
-        User driver = userRepository.findById(driverId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND));
-        return rideRepository.findAllByDriver(driver).stream()
+    public List<RideResponseDto> getRidesByDriverId(Long driverId) {
+        if (!userRepository.existsById(driverId)) {
+            throw new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND);
+        }
+        return rideRepository.findAllByDriverId(driverId).stream()
                 .map(rideMapper::toRideResponseDto)
                 .toList();
     }
 
     @Override
-    public List<RideResponseDto> getRidesByPassenger(Long passengerId) {
-        User passenger = userRepository.findById(passengerId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.PASSENGER_NOT_FOUND));
-        return rideRepository.findAllByPassenger(passenger).stream()
+    public List<RideResponseDto> getRidesByPassengerId(Long passengerId) {
+        if (!userRepository.existsById(passengerId)) {
+            throw new EntityNotFoundException(ErrorMessages.PASSENGER_NOT_FOUND);
+        }
+        return rideRepository.findAllByPassengerId(passengerId).stream()
                 .map(rideMapper::toRideResponseDto)
                 .toList();
     }

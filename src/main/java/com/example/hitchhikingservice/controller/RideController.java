@@ -38,14 +38,14 @@ public class RideController {
     public ResponseEntity<List<RideResponseDto>> getRidesByDriverId(
             @RequestParam Long driverId
     ) {
-        return ResponseEntity.ok(rideService.getRidesByDriver(driverId));
+        return ResponseEntity.ok(rideService.getRidesByDriverId(driverId));
     }
 
     @GetMapping("/passenger")
     public ResponseEntity<List<RideResponseDto>> getRidesByPassengerId(
             @RequestParam Long passengerId
     ) {
-        return ResponseEntity.ok(rideService.getRidesByPassenger(passengerId));
+        return ResponseEntity.ok(rideService.getRidesByPassengerId(passengerId));
     }
 
     @PostMapping("/create")

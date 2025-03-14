@@ -28,7 +28,11 @@ public abstract class LfuCache<T> {
         CacheEntry<T> entry = cache.get(id);
         if (entry != null) {
             entry.frequency++;
-            log.info("Cache hit: Retrieved item with ID {} from cache (frequency: {})", id, entry.frequency);
+            log.info(
+                    "Cache hit: Retrieved item with ID {} from cache (frequency: {})",
+                    id,
+                    entry.frequency
+            );
             return entry.value;
         }
         return null;
@@ -39,7 +43,11 @@ public abstract class LfuCache<T> {
             CacheEntry<T> entry = cache.get(id);
             entry.value = value;
             entry.frequency++;
-            log.info("Cache update: Updated item with ID {} in cache (frequency: {})", id, entry.frequency);
+            log.info(
+                    "Cache update: Updated item with ID {} in cache (frequency: {})",
+                    id,
+                    entry.frequency
+            );
         } else {
             if (cache.size() >= maxCapacity) {
                 evictLeastFrequentlyUsed();
