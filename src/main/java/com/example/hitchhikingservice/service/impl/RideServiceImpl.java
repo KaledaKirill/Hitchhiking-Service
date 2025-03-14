@@ -1,5 +1,6 @@
 package com.example.hitchhikingservice.service.impl;
 
+import com.example.hitchhikingservice.cache.RideCache;
 import com.example.hitchhikingservice.exception.EntityNotFoundException;
 import com.example.hitchhikingservice.model.dto.request.RideRequestDto;
 import com.example.hitchhikingservice.model.dto.response.RideResponseDto;
@@ -22,6 +23,7 @@ public class RideServiceImpl implements RideService {
     private final RideRepository rideRepository;
     private final UserRepository userRepository;
     private final RideMapper rideMapper;
+    private final RideCache rideCache;
 
     @Override
     public List<RideResponseDto> getAllRides() {
@@ -32,9 +34,16 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public RideResponseDto getRideById(Long id) {
+        Ride rideFromCache = rideCache.get(id);
+        if (rideFromCache != null) {
+            return rideMapper.toRideResponseDto(rideFromCache);
+        }
+
         Ride ride = rideRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND));
-        return rideMapper.toRideResponseDto(ride);
+        RideResponseDto rideResponseDto = rideMapper.toRideResponseDto(ride);
+        rideCache.put(id, ride);
+        return rideResponseDto;
     }
 
     @Override
@@ -63,6 +72,7 @@ public class RideServiceImpl implements RideService {
         Ride ride = rideMapper.toRide(rideRequestDto, driver);
 
         Ride savedRide = rideRepository.save(ride);
+        rideCache.put(savedRide.getId(), savedRide);
         return rideMapper.toRideResponseDto(savedRide);
     }
 
@@ -80,6 +90,7 @@ public class RideServiceImpl implements RideService {
         ride.setComment(rideRequestDto.comment());
 
         Ride updatedRide = rideRepository.save(ride);
+        rideCache.put(id, updatedRide);
         return rideMapper.toRideResponseDto(updatedRide);
     }
 
@@ -90,6 +101,7 @@ public class RideServiceImpl implements RideService {
             throw new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND);
         }
         rideRepository.deleteById(id);
+        rideCache.remove(id);
     }
 
     @Override
@@ -99,7 +111,6 @@ public class RideServiceImpl implements RideService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND));
         User passenger = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND));
-
 
         if (ride.getDriver().getId().equals(userId)) {
             throw new IllegalArgumentException("User is already a driver on this ride");
@@ -117,6 +128,7 @@ public class RideServiceImpl implements RideService {
         int actualSeatsCount = ride.getSeatsCount() - 1;
         ride.setSeatsCount(actualSeatsCount);
         rideRepository.save(ride);
+        rideCache.put(rideId, ride);
     }
 
     @Override
@@ -135,5 +147,6 @@ public class RideServiceImpl implements RideService {
         int actualSeatsCount = ride.getSeatsCount() + 1;
         ride.setSeatsCount(actualSeatsCount);
         rideRepository.save(ride);
+        rideCache.put(rideId, ride);
     }
 }

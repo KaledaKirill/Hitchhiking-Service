@@ -41,5 +41,3 @@ public class User {
     @ManyToMany(mappedBy = "passengers")
     private List<Ride> ridesAsPassenger = new ArrayList<>();
 }
-
-

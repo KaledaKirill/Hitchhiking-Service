@@ -1,5 +1,6 @@
 package com.example.hitchhikingservice.service.impl;
 
+import com.example.hitchhikingservice.cache.UserCache;
 import com.example.hitchhikingservice.exception.EntityNotFoundException;
 import com.example.hitchhikingservice.model.dto.request.UserRequestDto;
 import com.example.hitchhikingservice.model.dto.response.UserResponseDto;
@@ -12,14 +13,17 @@ import com.example.hitchhikingservice.utils.ErrorMessages;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserCache userCache;
 
     @Override
     public List<UserResponseDto> getAllUsers() {
@@ -30,8 +34,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserById(Long id) {
-        User user = userRepository.findById(id)
+        User user = userCache.get(id);
+        if (user != null) {
+            return userMapper.toUserResponseDto(user);
+        }
+
+        user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND));
+
+        userCache.put(id, user);
         return userMapper.toUserResponseDto(user);
     }
 
@@ -40,6 +51,8 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User user = userMapper.toUser(userRequestDto);
         User savedUser = userRepository.save(user);
+
+        userCache.put(savedUser.getId(), savedUser);
         return userMapper.toUserResponseDto(savedUser);
     }
 
@@ -54,6 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(userRequestDto.phone());
 
         User updatedUser = userRepository.save(user);
+        userCache.put(id, updatedUser);
         return userMapper.toUserResponseDto(updatedUser);
     }
 
@@ -68,5 +82,6 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.deleteById(id);
+        userCache.remove(id);
     }
 }
