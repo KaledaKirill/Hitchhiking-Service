@@ -12,7 +12,11 @@ public interface RideService {
 
     List<RideResponseDto> getRidesByDriverId(Long driverId);
 
+    List<RideResponseDto> getRidesByDriverName(String driverName);
+
     List<RideResponseDto> getRidesByPassengerId(Long passengerId);
+
+    List<RideResponseDto> getRidesByPassengerName(String passengerName);
 
     RideResponseDto createRide(RideRequestDto rideRequestDto);
 
@@ -23,4 +27,5 @@ public interface RideService {
     void addPassengerToRide(Long rideId, Long userId);
 
     void removePassengerFromRide(Long rideId, Long userId);
+
 }

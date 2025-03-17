@@ -34,18 +34,32 @@ public class RideController {
         return ResponseEntity.ok(rideService.getRideById(id));
     }
 
-    @GetMapping("/driver")
+    @GetMapping("/search/driver/id")
     public ResponseEntity<List<RideResponseDto>> getRidesByDriverId(
             @RequestParam Long driverId
     ) {
         return ResponseEntity.ok(rideService.getRidesByDriverId(driverId));
     }
 
-    @GetMapping("/passenger")
+    @GetMapping("/search/driver/name")
+    public ResponseEntity<List<RideResponseDto>> getRidesByDriverId(
+            @RequestParam String driverName
+    ) {
+        return ResponseEntity.ok(rideService.getRidesByDriverName(driverName));
+    }
+
+    @GetMapping("/search/passenger/id")
     public ResponseEntity<List<RideResponseDto>> getRidesByPassengerId(
             @RequestParam Long passengerId
     ) {
         return ResponseEntity.ok(rideService.getRidesByPassengerId(passengerId));
+    }
+
+    @GetMapping("/search/passenger/name")
+    public ResponseEntity<List<RideResponseDto>> getRidesByPassengerId(
+            @RequestParam String passengerName
+    ) {
+        return ResponseEntity.ok(rideService.getRidesByPassengerName(passengerName));
     }
 
     @PostMapping("/create")
