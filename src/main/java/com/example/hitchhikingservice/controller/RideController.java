@@ -4,6 +4,9 @@ import com.example.hitchhikingservice.model.dto.request.RideRequestDto;
 import com.example.hitchhikingservice.model.dto.response.RideResponseDto;
 import com.example.hitchhikingservice.service.RideService;
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +23,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/rides")
 @RequiredArgsConstructor
+@Tag(name = "Ride API", description = "Operations on rides")
 public class RideController {
 
     private final RideService rideService;
 
     @GetMapping
+    @Operation(summary = "Get all rides")
     public ResponseEntity<List<RideResponseDto>> getAllRides() {
         return ResponseEntity.ok(rideService.getAllRides());
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get ride by ID")
     public ResponseEntity<RideResponseDto> getRideById(@PathVariable Long id) {
         return ResponseEntity.ok(rideService.getRideById(id));
     }
 
     @GetMapping("/search/driver/id")
+    @Operation(summary = "Get ride by driver ID")
     public ResponseEntity<List<RideResponseDto>> getRidesByDriverId(
             @RequestParam Long driverId
     ) {
@@ -42,13 +49,15 @@ public class RideController {
     }
 
     @GetMapping("/search/driver/name")
-    public ResponseEntity<List<RideResponseDto>> getRidesByDriverId(
+    @Operation(summary = "Get ride by driver name")
+    public ResponseEntity<List<RideResponseDto>> getRidesByDriverName(
             @RequestParam String driverName
     ) {
         return ResponseEntity.ok(rideService.getRidesByDriverName(driverName));
     }
 
     @GetMapping("/search/passenger/id")
+    @Operation(summary = "Get ride by passenger ID")
     public ResponseEntity<List<RideResponseDto>> getRidesByPassengerId(
             @RequestParam Long passengerId
     ) {
@@ -56,13 +65,15 @@ public class RideController {
     }
 
     @GetMapping("/search/passenger/name")
-    public ResponseEntity<List<RideResponseDto>> getRidesByPassengerId(
+    @Operation(summary = "Get ride by passenger name")
+    public ResponseEntity<List<RideResponseDto>> getRidesByPassengerName(
             @RequestParam String passengerName
     ) {
         return ResponseEntity.ok(rideService.getRidesByPassengerName(passengerName));
     }
 
     @PostMapping("/create")
+    @Operation(summary = "Create ride")
     public ResponseEntity<RideResponseDto> createRide(
             @RequestBody RideRequestDto rideRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -70,6 +81,7 @@ public class RideController {
     }
 
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update ride")
     public ResponseEntity<RideResponseDto> updateRide(
             @PathVariable Long id,
             @RequestBody RideRequestDto rideRequestDto) {
@@ -77,12 +89,14 @@ public class RideController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete ride")
     public ResponseEntity<Void> deleteRide(@PathVariable Long id) {
         rideService.deleteRideById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{rideId}/passenger/{userId}")
+    @Operation(summary = "Add passenger to ride")
     public ResponseEntity<Void> addPassengerToRide(
             @PathVariable Long rideId,
             @PathVariable Long userId) {
@@ -91,6 +105,7 @@ public class RideController {
     }
 
     @DeleteMapping("/{rideId}/passenger/{userId}")
+    @Operation(summary = "Remove passenger from ride")
     public ResponseEntity<Void> removePassengerFromRide(
             @PathVariable Long rideId,
             @PathVariable Long userId) {
