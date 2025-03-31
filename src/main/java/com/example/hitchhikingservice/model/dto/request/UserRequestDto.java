@@ -3,9 +3,11 @@ package com.example.hitchhikingservice.model.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record UserRequestDto(
         @NotBlank(message = "Name must not be blank")
+        @Size(max = 127, message = "User name not exceed 127 characters")
         String name,
 
         @Email(message = "Invalid email format")

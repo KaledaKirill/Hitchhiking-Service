@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,8 @@ public class RideController {
     @PostMapping("/create")
     @Operation(summary = "Create ride")
     public ResponseEntity<RideResponseDto> createRide(
-            @RequestBody RideRequestDto rideRequestDto) {
+            @Valid @RequestBody RideRequestDto rideRequestDto
+    ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(rideService.createRide(rideRequestDto));
     }
@@ -84,13 +86,16 @@ public class RideController {
     @Operation(summary = "Update ride")
     public ResponseEntity<RideResponseDto> updateRide(
             @PathVariable Long id,
-            @RequestBody RideRequestDto rideRequestDto) {
+            @Valid @RequestBody RideRequestDto rideRequestDto
+    ) {
         return ResponseEntity.ok(rideService.updateRide(id, rideRequestDto));
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete ride")
-    public ResponseEntity<Void> deleteRide(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRide(
+            @PathVariable Long id
+    ) {
         rideService.deleteRideById(id);
         return ResponseEntity.noContent().build();
     }
@@ -99,7 +104,8 @@ public class RideController {
     @Operation(summary = "Add passenger to ride")
     public ResponseEntity<Void> addPassengerToRide(
             @PathVariable Long rideId,
-            @PathVariable Long userId) {
+            @PathVariable Long userId
+    ) {
         rideService.addPassengerToRide(rideId, userId);
         return ResponseEntity.ok().build();
     }
@@ -108,7 +114,8 @@ public class RideController {
     @Operation(summary = "Remove passenger from ride")
     public ResponseEntity<Void> removePassengerFromRide(
             @PathVariable Long rideId,
-            @PathVariable Long userId) {
+            @PathVariable Long userId
+    ) {
         rideService.removePassengerFromRide(rideId, userId);
         return ResponseEntity.noContent().build();
     }

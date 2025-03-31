@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +37,18 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> getUserById(
+            @PathVariable Long id
+    ) {
         UserResponseDto userResponseDto = userService.getUserById(id);
         return ResponseEntity.ok(userResponseDto);
     }
 
     @PostMapping("/create")
     @Operation(summary = "Create user")
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> createUser(
+            @Valid @RequestBody UserRequestDto userRequestDto
+    ) {
         UserResponseDto createdUser = userService.createUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
@@ -52,7 +57,7 @@ public class UserController {
     @Operation(summary = "Update user")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @RequestBody UserRequestDto userRequestDto
+            @Valid @RequestBody UserRequestDto userRequestDto
     ) {
         UserResponseDto updatedUser = userService.updateUser(id, userRequestDto);
         return ResponseEntity.ok(updatedUser);
@@ -60,7 +65,9 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete user")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable Long id
+    ) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }

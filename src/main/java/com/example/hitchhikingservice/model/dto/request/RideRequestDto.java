@@ -12,6 +12,7 @@ public record RideRequestDto(
         Long driverId,
 
         @NotBlank(message = "Car must not be blank")
+        @Size(max = 127, message = "Car model must not exceed 127 characters")
         String car,
 
         @NotNull(message = "Seats count must not be null")
