@@ -13,10 +13,10 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     @Query("SELECT r FROM Ride r JOIN r.passengers p WHERE p.id = :passengerId")
     List<Ride> findAllByPassengerId(Long passengerId);
 
-    @Query(value = "SELECT r.* FROM rides r " +
-            "JOIN ride_passengers rp ON r.id = rp.ride_id " +
-            "JOIN users p ON rp.user_id = p.id " +
-            "WHERE p.name = :passengerName", nativeQuery = true)
+    @Query(value = "SELECT r.* FROM rides r "
+        + "JOIN ride_passengers rp ON r.id = rp.ride_id "
+        + "JOIN users p ON rp.user_id = p.id "
+        + "WHERE p.name = :passengerName", nativeQuery = true)
     List<Ride> findAllByPassengerName(String passengerName);
 
 }

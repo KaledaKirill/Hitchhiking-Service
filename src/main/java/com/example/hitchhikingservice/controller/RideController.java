@@ -3,11 +3,10 @@ package com.example.hitchhikingservice.controller;
 import com.example.hitchhikingservice.model.dto.request.RideRequestDto;
 import com.example.hitchhikingservice.model.dto.response.RideResponseDto;
 import com.example.hitchhikingservice.service.RideService;
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
