@@ -20,6 +20,8 @@ public interface RideService {
 
     RideResponseDto createRide(RideRequestDto rideRequestDto);
 
+    List<RideResponseDto> createRides(List<RideRequestDto> rideRequestDtos);
+
     RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto);
 
     void deleteRideById(Long id);

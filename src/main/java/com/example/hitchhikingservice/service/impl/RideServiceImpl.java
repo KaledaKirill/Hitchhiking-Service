@@ -100,6 +100,21 @@ public class RideServiceImpl implements RideService {
 
     @Override
     @Transactional
+    public List<RideResponseDto> createRides(List<RideRequestDto> rideRequestDtos) {
+        return rideRequestDtos.stream()
+                .map(dto -> {
+                    User driver = userRepository.findById(dto.driverId())
+                            .orElseThrow(() ->
+                                    new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND));
+                    Ride ride = rideMapper.toRide(dto, driver);
+                    return rideRepository.save(ride);
+                })
+                .map(rideMapper::toRideResponseDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
     public RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto) {
         Ride ride = rideRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND));

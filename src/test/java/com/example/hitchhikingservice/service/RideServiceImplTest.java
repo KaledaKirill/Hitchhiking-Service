@@ -382,4 +382,40 @@ class RideServiceImplTest {
         assertThat(ride.getSeatsCount()).isEqualTo(2);
         verify(rideCache).put(1L, ride);
     }
+
+    @Test
+    void createRidesBulk_shouldCreateMultipleRides_whenDtosAreValid() {
+        RideRequestDto dto1 = new RideRequestDto(1L, "Car1", 3, "CityA", "CityB", LocalDateTime.now(), "Note1");
+        RideRequestDto dto2 = new RideRequestDto(2L, "Car2", 2, "CityX", "CityY", LocalDateTime.now().plusHours(1), "Note2");
+
+        User driver1 = new User(); driver1.setId(1L);
+        User driver2 = new User(); driver2.setId(2L);
+
+        Ride ride1 = new Ride(); ride1.setId(10L); ride1.setDriver(driver1);
+        Ride ride2 = new Ride(); ride2.setId(20L); ride2.setDriver(driver2);
+
+        RideResponseDto response1 = new RideResponseDto(10L, "Car1", 3, "CityA", "CityB", dto1.departureTime(), "Note1", null, List.of());
+        RideResponseDto response2 = new RideResponseDto(20L, "Car2", 2, "CityX", "CityY", dto2.departureTime(), "Note2", null, List.of());
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(driver1));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(driver2));
+
+        when(rideMapper.toRide(dto1, driver1)).thenReturn(ride1);
+        when(rideMapper.toRide(dto2, driver2)).thenReturn(ride2);
+
+        when(rideRepository.save(ride1)).thenReturn(ride1);
+        when(rideRepository.save(ride2)).thenReturn(ride2);
+
+        when(rideMapper.toRideResponseDto(ride1)).thenReturn(response1);
+        when(rideMapper.toRideResponseDto(ride2)).thenReturn(response2);
+
+        List<RideResponseDto> result = rideService.createRides(List.of(dto1, dto2));
+
+        assertThat(result).hasSize(2).containsExactly(response1, response2);
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).findById(2L);
+        verify(rideRepository).save(ride1);
+        verify(rideRepository).save(ride2);
+    }
 }

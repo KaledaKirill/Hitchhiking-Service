@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,6 +80,16 @@ public class RideController {
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(rideService.createRide(rideRequestDto));
+    }
+
+    @Validated
+    @PostMapping("/bulk")
+    @Operation(summary = "Create rides")
+    public ResponseEntity<List<RideResponseDto>> createRidesBulk(
+            @RequestBody List<RideRequestDto> rideRequestDtos
+    ) {
+        List<RideResponseDto> createdRides = rideService.createRides(rideRequestDtos);
+        return ResponseEntity.ok(createdRides);
     }
 
     @PutMapping("/update/{id}")
