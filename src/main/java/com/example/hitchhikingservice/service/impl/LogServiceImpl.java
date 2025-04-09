@@ -34,7 +34,7 @@ public class LogServiceImpl implements LogService {
         return createResourceFromTempFile(tempFile, date);
     }
 
-    private LocalDate parseDate(String date) {
+    public LocalDate parseDate(String date) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             return LocalDate.parse(date, formatter);
@@ -43,13 +43,13 @@ public class LogServiceImpl implements LogService {
         }
     }
 
-    private void validateLogFileExists(Path path) {
+    public void validateLogFileExists(Path path) {
         if (!Files.exists(path)) {
             throw new EntityNotFoundException("File doesn't exist: " + LOG_FILE_PATH);
         }
     }
 
-    private Path createTempFile(LocalDate logDate) {
+    public Path createTempFile(LocalDate logDate) {
         try {
             return Files.createTempFile("logs-" + logDate, ".log");
         } catch (IOException e) {
@@ -57,7 +57,7 @@ public class LogServiceImpl implements LogService {
         }
     }
 
-    private void filterAndWriteLogsToTempFile(Path logFilePath, String formattedDate,
+    public void filterAndWriteLogsToTempFile(Path logFilePath, String formattedDate,
                                               Path tempFile) {
         try (BufferedReader reader = Files.newBufferedReader(logFilePath)) {
             Files.write(tempFile, reader.lines()
@@ -68,7 +68,7 @@ public class LogServiceImpl implements LogService {
         }
     }
 
-    private Resource createResourceFromTempFile(Path tempFile, String date) {
+    public Resource createResourceFromTempFile(Path tempFile, String date) {
         try {
             if (Files.size(tempFile) == 0) {
                 throw new EntityNotFoundException("There are no logs for specified date: " + date);
