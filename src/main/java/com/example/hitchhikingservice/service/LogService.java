@@ -1,19 +1,14 @@
 package com.example.hitchhikingservice.service;
 
-import java.nio.file.Path;
-import java.time.LocalDate;
+import java.io.IOException;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import com.example.hitchhikingservice.model.entity.LogObj;
 
 public interface LogService {
-    Resource getLogsByDate(String date);
+    Long createLogAsync(String date);
 
-    LocalDate parseDate(String date);
+    LogObj getStatus(Long taskId);
 
-    void validateLogFileExists(Path path);
-
-    Path createTempFile(LocalDate logDate);
-
-    void filterAndWriteLogsToTempFile(Path logFilePath, String formattedDate, Path tempFile);
-
-    Resource createResourceFromTempFile(Path tempFile, String date);
+    ResponseEntity<Resource> downloadCreatedLogs(Long taskId) throws IOException;
 }
