@@ -1,8 +1,9 @@
 package com.example.hitchhikingservice.service;
 
+import java.util.Map;
+
 public interface CounterService {
-    void increment();
+    void increment(String uri);
 
-    long getTotalVisits();
-
+    Map<String, Long> getStats();
 }

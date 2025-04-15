@@ -1,5 +1,9 @@
 package com.example.hitchhikingservice.service.impl;
 
+import com.example.hitchhikingservice.exception.EntityNotFoundException;
+import com.example.hitchhikingservice.model.entity.LogObj;
+import com.example.hitchhikingservice.service.LogService;
+import com.example.hitchhikingservice.utils.ErrorMessages;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,10 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import com.example.hitchhikingservice.exception.EntityNotFoundException;
-import com.example.hitchhikingservice.model.entity.LogObj;
-import com.example.hitchhikingservice.service.LogService;
-import com.example.hitchhikingservice.utils.ErrorMessages;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -68,7 +68,9 @@ public class LogServiceImpl implements LogService {
                 logFile = Files.createTempFile("logs-" + formattedDate, ".log");
             } else {
                 FileAttribute<Set<PosixFilePermission>> attr =
-                        PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+                        PosixFilePermissions.asFileAttribute(
+                                PosixFilePermissions.fromString("rwx------")
+                        );
                 logFile = Files.createTempFile("logs-" + formattedDate, ".log", attr);
             }
 
