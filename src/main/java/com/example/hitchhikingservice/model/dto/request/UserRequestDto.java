@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Size;
 
 public record UserRequestDto(
         @NotBlank(message = "Name must not be blank")
-        @Size(max = 127, message = "User name not exceed 127 characters")
-        String name,
+        @Size(max = 127, message = "User username not exceed 127 characters")
+        String username,
 
         @Email(message = "Invalid email format")
         String email,

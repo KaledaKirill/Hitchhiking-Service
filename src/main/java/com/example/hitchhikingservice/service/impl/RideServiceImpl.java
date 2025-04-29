@@ -58,10 +58,10 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public List<RideResponseDto> getRidesByDriverName(String driverName) {
-        if (!userRepository.existsByName(driverName)) {
+        if (!userRepository.existsByUsername(driverName)) {
             throw new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND);
         }
-        return rideRepository.findAllByDriverName(driverName).stream()
+        return rideRepository.findAllByDriverUsername(driverName).stream()
                 .map(rideMapper::toRideResponseDto)
                 .toList();
     }
@@ -78,7 +78,7 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public List<RideResponseDto> getRidesByPassengerName(String passengerName) {
-        if (!userRepository.existsByName(passengerName)) {
+        if (!userRepository.existsByUsername(passengerName)) {
             throw new EntityNotFoundException(ErrorMessages.PASSENGER_NOT_FOUND);
         }
         return rideRepository.findAllByPassengerName(passengerName).stream()

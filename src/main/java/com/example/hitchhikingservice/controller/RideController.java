@@ -50,7 +50,7 @@ public class RideController {
     }
 
     @GetMapping("/search/driver/name")
-    @Operation(summary = "Get ride by driver name")
+    @Operation(summary = "Get ride by driver username")
     public ResponseEntity<List<RideResponseDto>> getRidesByDriverName(
             @RequestParam String driverName
     ) {
@@ -66,7 +66,7 @@ public class RideController {
     }
 
     @GetMapping("/search/passenger/name")
-    @Operation(summary = "Get ride by passenger name")
+    @Operation(summary = "Get ride by passenger username")
     public ResponseEntity<List<RideResponseDto>> getRidesByPassengerName(
             @RequestParam String passengerName
     ) {
