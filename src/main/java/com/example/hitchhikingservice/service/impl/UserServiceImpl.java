@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND));
 
-        user.setUsername(userRequestDto.username());
+        user.setName(userRequestDto.name());
         user.setEmail(userRequestDto.email());
         user.setPhone(userRequestDto.phone());
 

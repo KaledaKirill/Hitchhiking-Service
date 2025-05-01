@@ -10,7 +10,7 @@ public class UserMapper {
 
     public User toUser(UserRequestDto dto) {
         User user = new User();
-        user.setUsername(dto.username());
+        user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
         return user;
@@ -19,7 +19,7 @@ public class UserMapper {
     public UserResponseDto toUserResponseDto(User user) {
         return new UserResponseDto(
                 user.getId(),
-                user.getUsername(),
+                user.getName(),
                 user.getEmail(),
                 user.getPhone()
         );
