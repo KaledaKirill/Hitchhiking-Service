@@ -12,8 +12,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public AuthResponseDto register(AuthRequestDto request) {
+        // Проверка на существование пользователя с таким email
+        Optional<User> existingUser = userRepository.findByEmail(request.email());
+        if (existingUser.isPresent()) {
+            throw new IllegalStateException("User with this email already exists");
+        }
+
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
@@ -40,12 +49,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public AuthResponseDto login(LoginRequestDto request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.email(), request.password())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+        } catch (AuthenticationException e) {
+            throw new IllegalStateException("Invalid email or password", e);
+        }
 
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> new IllegalStateException("Invalid email or password"));
 
         String token = jwtService.generateToken(user);
         return new AuthResponseDto(token);

@@ -17,6 +17,7 @@ public record AuthRequestDto(
         @Size(min = 6, message = "Password must be at least 6 characters")
         String password,
 
+        @NotBlank(message = "Phone must not be blank")
         @Size(max = 20, message = "Phone number must not exceed 20 characters")
         String phone
 ) {}
