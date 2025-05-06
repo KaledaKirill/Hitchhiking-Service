@@ -84,4 +84,12 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         userCache.remove(id);
     }
+
+    @Override
+    public UserResponseDto getUserByEmail(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND));
+
+        return userMapper.toUserResponseDto(user);
+    }
 }
