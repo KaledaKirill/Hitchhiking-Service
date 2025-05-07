@@ -18,13 +18,11 @@ public interface RideService {
 
     List<RideResponseDto> getRidesByPassengerName(String passengerName);
 
-    RideResponseDto createRide(RideRequestDto rideRequestDto);
+    RideResponseDto createRide(RideRequestDto rideRequestDto, Long driverId);
 
-    List<RideResponseDto> createRides(List<RideRequestDto> rideRequestDtos);
+    RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto, Long userId);
 
-    RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto);
-
-    void deleteRideById(Long id);
+    void deleteRideById(Long id, Long userId);
 
     void addPassengerToRide(Long rideId, Long userId);
 

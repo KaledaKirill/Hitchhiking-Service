@@ -1,6 +1,5 @@
 package com.example.hitchhikingservice.service.impl;
 
-import com.example.hitchhikingservice.cache.RideCache;
 import com.example.hitchhikingservice.exception.EntityNotFoundException;
 import com.example.hitchhikingservice.model.dto.request.RideRequestDto;
 import com.example.hitchhikingservice.model.dto.response.RideResponseDto;
@@ -23,7 +22,6 @@ public class RideServiceImpl implements RideService {
     private final RideRepository rideRepository;
     private final UserRepository userRepository;
     private final RideMapper rideMapper;
-    private final RideCache rideCache;
 
     @Override
     public List<RideResponseDto> getAllRides() {
@@ -34,16 +32,9 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public RideResponseDto getRideById(Long id) {
-        Ride rideFromCache = rideCache.get(id);
-        if (rideFromCache != null) {
-            return rideMapper.toRideResponseDto(rideFromCache);
-        }
-
         Ride ride = rideRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND));
-        RideResponseDto rideResponseDto = rideMapper.toRideResponseDto(ride);
-        rideCache.put(id, ride);
-        return rideResponseDto;
+        return rideMapper.toRideResponseDto(ride);
     }
 
     @Override
@@ -88,36 +79,23 @@ public class RideServiceImpl implements RideService {
 
     @Override
     @Transactional
-    public RideResponseDto createRide(RideRequestDto rideRequestDto) {
-        User driver = userRepository.findById(rideRequestDto.driverId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND));
+    public RideResponseDto createRide(RideRequestDto rideRequestDto, Long driverId) {
+        User driver = userRepository.findById(driverId)
+                .orElseThrow(() -> new EntityNotFoundException("Driver not found with id: " + driverId));
         Ride ride = rideMapper.toRide(rideRequestDto, driver);
 
         Ride savedRide = rideRepository.save(ride);
-        rideCache.put(savedRide.getId(), savedRide);
         return rideMapper.toRideResponseDto(savedRide);
     }
 
     @Override
     @Transactional
-    public List<RideResponseDto> createRides(List<RideRequestDto> rideRequestDtos) {
-        return rideRequestDtos.stream()
-                .map(dto -> {
-                    User driver = userRepository.findById(dto.driverId())
-                            .orElseThrow(() ->
-                                    new EntityNotFoundException(ErrorMessages.DRIVER_NOT_FOUND));
-                    Ride ride = rideMapper.toRide(dto, driver);
-                    return rideRepository.save(ride);
-                })
-                .map(rideMapper::toRideResponseDto)
-                .toList();
-    }
-
-    @Override
-    @Transactional
-    public RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto) {
+    public RideResponseDto updateRide(Long id, RideRequestDto rideRequestDto, Long userId) {
         Ride ride = rideRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException("Ride not found with id: " + id));
+        if (!ride.getDriver().getId().equals(userId)) {
+            throw new RuntimeException("Only the driver can update this ride");
+        }
 
         ride.setCar(rideRequestDto.car());
         ride.setSeatsCount(rideRequestDto.seatsCount());
@@ -127,18 +105,18 @@ public class RideServiceImpl implements RideService {
         ride.setComment(rideRequestDto.comment());
 
         Ride updatedRide = rideRepository.save(ride);
-        rideCache.put(id, updatedRide);
         return rideMapper.toRideResponseDto(updatedRide);
     }
 
     @Override
     @Transactional
-    public void deleteRideById(Long id) {
-        if (!rideRepository.existsById(id)) {
-            throw new EntityNotFoundException(ErrorMessages.RIDE_NOT_FOUND);
+    public void deleteRideById(Long id, Long userId) {
+        Ride ride = rideRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ride not found with id: " + id));
+        if (!ride.getDriver().getId().equals(userId)) {
+            throw new RuntimeException("Only the driver can delete this ride");
         }
-        rideRepository.deleteById(id);
-        rideCache.remove(id);
+        rideRepository.delete(ride);
     }
 
     @Override
@@ -165,7 +143,6 @@ public class RideServiceImpl implements RideService {
         int actualSeatsCount = ride.getSeatsCount() - 1;
         ride.setSeatsCount(actualSeatsCount);
         rideRepository.save(ride);
-        rideCache.put(rideId, ride);
     }
 
     @Override
@@ -184,6 +161,5 @@ public class RideServiceImpl implements RideService {
         int actualSeatsCount = ride.getSeatsCount() + 1;
         ride.setSeatsCount(actualSeatsCount);
         rideRepository.save(ride);
-        rideCache.put(rideId, ride);
     }
 }

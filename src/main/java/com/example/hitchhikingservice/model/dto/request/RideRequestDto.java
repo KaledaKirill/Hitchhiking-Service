@@ -8,9 +8,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public record RideRequestDto(
-        @NotNull(message = "Driver ID must not be null")
-        Long driverId,
-
         @NotBlank(message = "Car must not be blank")
         @Size(max = 127, message = "Car model must not exceed 127 characters")
         String car,
