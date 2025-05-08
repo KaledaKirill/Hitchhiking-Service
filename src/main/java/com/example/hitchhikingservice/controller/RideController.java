@@ -35,9 +35,13 @@ public class RideController {
     private final JwtService jwtService;
 
     @GetMapping
-    @Operation(summary = "Get all rides")
-    public ResponseEntity<List<RideResponseDto>> getAllRides() {
-        return ResponseEntity.ok(rideService.getAllRides());
+    @Operation(summary = "Get all rides with optional filtering")
+    public ResponseEntity<List<RideResponseDto>> getAllRides(
+            @RequestParam(required = false) String departure,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) String date
+    ) {
+        return ResponseEntity.ok(rideService.getAllRides(departure, destination, date));
     }
 
     @GetMapping("/{id}")

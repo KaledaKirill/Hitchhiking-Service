@@ -11,6 +11,10 @@ import com.example.hitchhikingservice.service.RideService;
 import com.example.hitchhikingservice.service.mapper.RideMapper;
 import com.example.hitchhikingservice.utils.ErrorMessages;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,9 +27,29 @@ public class RideServiceImpl implements RideService {
     private final UserRepository userRepository;
     private final RideMapper rideMapper;
 
-    @Override
-    public List<RideResponseDto> getAllRides() {
-        return rideRepository.findAll().stream()
+    public List<RideResponseDto> getAllRides(String departure, String destination, String date) {
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
+
+        if (date != null && !date.isEmpty()) {
+            LocalDate localDate = LocalDate.parse(date);
+            startDate = localDate.atStartOfDay();
+            endDate = localDate.atTime(LocalTime.MAX);
+        }
+
+        List<Ride> rides = rideRepository.findAll();
+
+        final LocalDateTime finalStartDate = startDate;
+        final LocalDateTime finalEndDate = endDate;
+
+        List<Ride> filteredRides = rides.stream()
+                .filter(ride -> departure == null || departure.isEmpty() || ride.getDeparture().toLowerCase().contains(departure.toLowerCase()))
+                .filter(ride -> destination == null || destination.isEmpty() || ride.getDestination().toLowerCase().contains(destination.toLowerCase()))
+                .filter(ride -> finalStartDate == null || !ride.getDepartureTime().isBefore(finalStartDate))
+                .filter(ride -> finalEndDate == null || !ride.getDepartureTime().isAfter(finalEndDate))
+                .toList();
+
+        return filteredRides.stream()
                 .map(rideMapper::toRideResponseDto)
                 .toList();
     }

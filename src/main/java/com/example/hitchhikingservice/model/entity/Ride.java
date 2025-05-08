@@ -1,5 +1,6 @@
 package com.example.hitchhikingservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,14 +44,20 @@ public class Ride {
     private List<User> passengers = new ArrayList<>();
 
     private String car;
+
     @Column(nullable = false)
     private Integer seatsCount;
+
     @Column(nullable = false)
     private String departure;
+
     @Column(nullable = false)
     private String destination;
-    @Column(nullable = false)
+
+    @Column(name = "departure_time", columnDefinition = "TIMESTAMPTZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
     private LocalDateTime departureTime;
+
     private String comment;
 }
 

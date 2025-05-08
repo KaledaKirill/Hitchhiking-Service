@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RideService {
 
-    List<RideResponseDto> getAllRides();
+    List<RideResponseDto> getAllRides(String departure, String destination, String date);
 
     RideResponseDto getRideById(Long id);
 

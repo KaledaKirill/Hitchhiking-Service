@@ -1,9 +1,13 @@
 package com.example.hitchhikingservice.repository;
 
 import com.example.hitchhikingservice.model.entity.Ride;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface RideRepository extends JpaRepository<Ride, Long> {
     List<Ride> findAllByDriverId(Long driverId);
@@ -18,5 +22,5 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
         + "JOIN users p ON rp.user_id = p.id "
         + "WHERE p.name = :passengerName", nativeQuery = true)
     List<Ride> findAllByPassengerName(String passengerName);
-
 }
+
