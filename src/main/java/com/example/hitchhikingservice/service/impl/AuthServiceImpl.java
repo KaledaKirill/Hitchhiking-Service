@@ -29,7 +29,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public AuthResponseDto register(AuthRequestDto request) {
-        // Проверка на существование пользователя с таким email
         Optional<User> existingUser = userRepository.findByEmail(request.email());
         if (existingUser.isPresent()) {
             throw new IllegalStateException("User with this email already exists");

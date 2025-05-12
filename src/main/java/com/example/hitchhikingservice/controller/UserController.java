@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 @RequiredArgsConstructor
 @Tag(name = "User API", description = "Operations on users")
 public class UserController {
@@ -52,15 +52,6 @@ public class UserController {
         String userEmail = authentication.getName();
         UserResponseDto user = userService.getUserByEmail(userEmail);
         return ResponseEntity.ok(user);
-    }
-
-    @PostMapping("/create")
-    @Operation(summary = "Create user")
-    public ResponseEntity<UserResponseDto> createUser(
-            @Valid @RequestBody UserRequestDto userRequestDto
-    ) {
-        UserResponseDto createdUser = userService.createUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/update/{id}")

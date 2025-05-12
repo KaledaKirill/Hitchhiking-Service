@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rides")
+@RequestMapping("rides")
 @RequiredArgsConstructor
 @Tag(name = "Ride API", description = "Operations on rides")
 public class RideController {

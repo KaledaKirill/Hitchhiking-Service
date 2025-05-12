@@ -11,7 +11,6 @@ public class UserMapper {
     public User toUser(UserRequestDto dto) {
         User user = new User();
         user.setName(dto.name());
-        user.setEmail(dto.email());
         user.setPhone(dto.phone());
         return user;
     }

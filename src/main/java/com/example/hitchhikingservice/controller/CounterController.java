@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/visits")
+@RequestMapping("visits")
 @RequiredArgsConstructor
 @Tag(name = "Visit tracking", description = "Visit counter operations")
 public class CounterController {

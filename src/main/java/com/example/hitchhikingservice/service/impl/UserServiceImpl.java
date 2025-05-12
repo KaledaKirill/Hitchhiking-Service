@@ -39,20 +39,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponseDto createUser(UserRequestDto userRequestDto) {
-        User user = userMapper.toUser(userRequestDto);
-        User savedUser = userRepository.save(user);
-        return userMapper.toUserResponseDto(savedUser);
-    }
-
-    @Override
-    @Transactional
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND));
 
         user.setName(userRequestDto.name());
-        user.setEmail(userRequestDto.email());
         user.setPhone(userRequestDto.phone());
 
         User updatedUser = userRepository.save(user);
